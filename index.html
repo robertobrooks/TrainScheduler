@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Train Scheduler</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" src="style.css" />
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="jumbotron h1 text-center">Train Scheduler</div>
+
+    <div>
+      <div id="schedule" class="">
+        <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Train Name</th>
+        <th>Destination</th>
+        <th>Frequency (min)</th>
+        <th>Next Arrival</th>
+        <th>Minutes Away</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+      </div>
+    </div>
+
+    <div>
+      <div id="form" class="form-group well">
+        <fieldset class="the-fieldset">
+        <legend class="the-legend">Add a Train</legend>
+        <label class="top-buffer" for="name">Train Name</label>
+        <input type="text" class="form-control top-buffer" id="name" />
+        <br />
+        <label class="top-buffer" for="destination">Destination</label>
+        <input type="text" class="form-control top-buffer" id="destination" />
+        <br>
+        <label for="first">First Train Time (HH:mm - military time)</label>
+        <input type="text" class="form-control" id="first" />
+        <br>
+        <label for="frequency">Frequency:</label>
+        <input type="text" class="form-control" id="frequency" />
+        <br>
+        <button id="submit" class="btn">Submit</button>
+        </fieldset>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCVG-aTPpZHYnXmfzu8sqIMcEbHF6lvgTQ",
+      authDomain: "robertobrooks-92eef.firebaseapp.com",
+      databaseURL: "https://robertobrooks-92eef.firebaseio.com",
+      projectId: "robertobrooks-92eef",
+      storageBucket: "robertobrooks-92eef.appspot.com",
+      messagingSenderId: "810015357559"
+    };
+
+// Initialize db with configuration provided
+    firebase.initializeApp(config);
+
+// Define a variable for the database library
+    var database = firebase.database();
+
+    var array=[];
+
+    var name = firebase.database().ref().child('/name/');
+    var destination = firebase.database().ref().child('/destination/');
+    var destination = firebase.database().ref().child('/frequency/');
+    var destination = firebase.database().ref().child('/arrival/');
+    var destination = firebase.database().ref().child('/away/');
+
+    database.ref().on('value',function(snapshot){
+        snapshot.forEach(function(snap){
+            var itemVal = snap.val();
+            array.push(itemVal)
+        });
+
+    for (i=0; i < array.length; i++){
+      document.getElementById('table').innerHTML += '<tr id="col'+i+'"></tr>';
+      document.getElementById('col'+i).innerHTML += '<td>'+array[i].name+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+array[i].destination+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+array[i].frequency+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+array[i].arrival+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+array[i].away+'</td>';
+    }
+
+});
+
+
+    $("#search").on("click", function() {
+      var searchQuery = $("#query").val();
+      var numRecords = $("#num").val();
+      var startYear = $("#start").val();
+      var endYear = $("#end").val();
+      console.log(searchQuery);
+      console.log(numRecords);
+      console.log(startYear);
+      console.log(endYear);
+
+      var results = "<div>Results Here: </div>"
+      $("#results").append(searchQuery);
+    });
+
+    $("#clear").on("click", function() {
+      $("#query").val('');
+      $("#num").val('');
+      $("#start").val('');
+      $("#end").val('');
+    });
+  </script>
+
+</body>
+
+</html>

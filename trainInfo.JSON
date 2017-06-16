@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "name": "Union Pacific West",
+        "destination": "Harvard",
+        "frequency": 30,
+        "arrival": "18:30",
+        "away": 10
+    },
+    {
+        "id": 2,
+        "name": "BNSF Railway",
+        "destination": "Naperville",
+        "frequency": 15,
+        "arrival": "17:30",
+        "away": 5
+    }
+]
