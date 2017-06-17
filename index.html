@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" src="style.css" />
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="moment.js"></script>
 </head>
 
 <body>
@@ -47,7 +48,7 @@
         <label for="frequency">Frequency:</label>
         <input type="text" class="form-control" id="frequency" />
         <br>
-        <button id="submit" class="btn">Submit</button>
+        <button id="submit" class="btn">Add</button>
         </fieldset>
       </div>
     </div>
@@ -56,6 +57,29 @@
 
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
   <script>
+
+    var date = moment();
+    var format = 'LLLL';
+    var result = moment(date).format(format);
+    console.log(result);
+
+    var addDate = moment(date).add({day:1, months:6}).format('l');
+    console.log(addDate);
+
+    var start = moment();
+    var end = '2017-06-17';
+    var result = moment(end).diff(moment(start));
+    console.log(result);
+    var humanize = moment.duration(result).humanize();
+    console.log(humanize);
+    var asHours = moment.duration(result).as('hours');
+    console.log(asHours);
+
+    var now = moment();
+    var nowHuman = moment(date).format('HH:mm');
+    var nowDiff = moment(end).diff(moment());
+
+
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyCVG-aTPpZHYnXmfzu8sqIMcEbHF6lvgTQ",
@@ -77,8 +101,6 @@
     var name = firebase.database().ref().child('/name/');
     var destination = firebase.database().ref().child('/destination/');
     var destination = firebase.database().ref().child('/frequency/');
-    var destination = firebase.database().ref().child('/arrival/');
-    var destination = firebase.database().ref().child('/away/');
 
     database.ref().on('value',function(snapshot){
         snapshot.forEach(function(snap){
@@ -91,33 +113,34 @@
       document.getElementById('col'+i).innerHTML += '<td>'+array[i].name+'</td>';
       document.getElementById('col'+i).innerHTML += '<td>'+array[i].destination+'</td>';
       document.getElementById('col'+i).innerHTML += '<td>'+array[i].frequency+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+array[i].arrival+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+array[i].away+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+nowHuman+'</td>';
+      document.getElementById('col'+i).innerHTML += '<td>'+moment(end).diff(moment())+'</td>';
     }
 
 });
 
+document.getElementById("submit").onclick = function() {
+  var trainName = $("#name").val();
+  var trainDestination = $("#destination").val();
+  var trainFirst = $("#first").val();
+  var trainFrequency = $("#frequency").val();
+  var trainArrival = '';
+  var trainAway = '';
 
-    $("#search").on("click", function() {
-      var searchQuery = $("#query").val();
-      var numRecords = $("#num").val();
-      var startYear = $("#start").val();
-      var endYear = $("#end").val();
-      console.log(searchQuery);
-      console.log(numRecords);
-      console.log(startYear);
-      console.log(endYear);
+  database.ref(/* the location in the databae*/).push({
+    name: trainName,
+    destination: trainDestination,
+    frequency: trainFrequency,
+    arrival: trainArrival,
+    away: trainAway,
+    first: trainFirst
+  });
 
-      var results = "<div>Results Here: </div>"
-      $("#results").append(searchQuery);
-    });
+  location.reload();
 
-    $("#clear").on("click", function() {
-      $("#query").val('');
-      $("#num").val('');
-      $("#start").val('');
-      $("#end").val('');
-    });
+}
+
+
   </script>
 
 </body>

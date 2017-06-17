@@ -1,18 +1,43 @@
 [
     {
-        "id": 1,
         "name": "Union Pacific West",
-        "destination": "Harvard",
+        "destination": "Aurora",
         "frequency": 30,
-        "arrival": "18:30",
-        "away": 10
+        "first": "07:00"
     },
     {
-        "id": 2,
+        "id": 1,
         "name": "BNSF Railway",
         "destination": "Naperville",
         "frequency": 15,
-        "arrival": "17:30",
-        "away": 5
+        "first": "08:01"
+    },
+    {
+        "id": 2,
+        "name": "Metra Electric District",
+        "destination": "Blue Island",
+        "frequency": 20,
+        "first": "07:25"
+    },
+    {
+        "id": 3,
+        "name": "Union Pacific North",
+        "destination": "Chicago Heights",
+        "frequency": 45,
+        "first": "07:35"
+    },
+    {
+        "id": 4,
+        "name": "Union Pacific Northwest",
+        "destination": "Harvard",
+        "frequency": 60,
+        "first": "08:08"
+    },
+    {
+        "id": 5,
+        "name": "Rock Island District",
+        "destination": "Joliet",
+        "frequency": 35,
+        "first": "07:03"
     }
 ]
