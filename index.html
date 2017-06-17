@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" src="style.css" />
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<!-- Using a local script for moment.js -->
   <script src="moment.js"></script>
 </head>
 
@@ -15,26 +16,27 @@
 
     <div class="jumbotron h1 text-center">Train Scheduler</div>
 
+<!-- Creating the table for the Arrival times -->
     <div>
       <div id="schedule" class="">
         <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Train Name</th>
-        <th>Destination</th>
-        <th>Frequency (min)</th>
-        <th>Next Arrival</th>
-        <th>Minutes Away</th>
-      </tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
+          <thead>
+            <tr>
+              <th>Train Name</th>
+              <th>Destination</th>
+              <th>Frequency (min)</th>
+              <th>Next Arrival</th>
+              <th>Minutes Away</th>
+            </tr>
+          </thead>
+          <tbody id="table"></tbody>
+        </table>
       </div>
     </div>
 
+<!-- Creating the form to add new trains -->
     <div>
       <div id="form" class="form-group well">
-        <fieldset class="the-fieldset">
         <legend class="the-legend">Add a Train</legend>
         <label class="top-buffer" for="name">Train Name</label>
         <input type="text" class="form-control top-buffer" id="name" />
@@ -45,130 +47,18 @@
         <label for="first">First Train Time (HH:mm - military time)</label>
         <input type="text" class="form-control" id="first" />
         <br>
-        <label for="frequency">Frequency:</label>
+        <label for="frequency">Frequency (in minutes):</label>
         <input type="text" class="form-control" id="frequency" />
         <br>
         <button id="submit" class="btn">Add</button>
-        </fieldset>
+
       </div>
     </div>
 
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
-  <script>
-
-    var date = moment();
-    var format = 'LLLL';
-    var result = moment(date).format(format);
-    console.log(result);
-
-    var addDate = moment(date).add({day:1, months:6}).format('l');
-    console.log(addDate);
-
-    var start = moment();
-    var end = '2017-06-17';
-    var result = moment(end).diff(moment(start));
-    console.log(result);
-    var humanize = moment.duration(result).humanize();
-    console.log(humanize);
-    var asHours = moment.duration(result).as('hours');
-    console.log(asHours);
-
-    var now = moment();
-    var nowHuman = moment(date).format('HH:mm');
-    var nowDiff = moment(end).diff(moment());
-
-    console.log(parseInt(moment().format('HH')));
-
-    var time = "08:00";
-    var timeCalc = moment(time, "HH:mm").add({minutes:15}).format('HH:mm');
-    console.log(timeCalc);
-
-    var j = moment("08:00", "HH:mm").format("HH:mm");
-
-        while (moment().format('HH:mm') > j) {
-            j = moment(j, "HH : mm").add({minutes:16}).format('HH:mm');;
-          };
-
-     var minutes = moment(j).diff(moment(timeCalc), 'minutes');
-     console.log(minutes);
-
-// Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyCVG-aTPpZHYnXmfzu8sqIMcEbHF6lvgTQ",
-      authDomain: "robertobrooks-92eef.firebaseapp.com",
-      databaseURL: "https://robertobrooks-92eef.firebaseio.com",
-      projectId: "robertobrooks-92eef",
-      storageBucket: "robertobrooks-92eef.appspot.com",
-      messagingSenderId: "810015357559"
-    };
-
-// Initialize db with configuration provided
-    firebase.initializeApp(config);
-
-// Define a variable for the database library
-    var database = firebase.database();
-
-    var array=[];
-
-    var name = firebase.database().ref().child('/name/');
-    var destination = firebase.database().ref().child('/destination/');
-    var destination = firebase.database().ref().child('/frequency/');
-
-    database.ref().on('value',function(snapshot){
-        snapshot.forEach(function(snap){
-            var itemVal = snap.val();
-            array.push(itemVal)
-        });
-
-    for (i=0; i < array.length; i++){
-
-      var newTime = moment(array[i].first, "HH:mm").format("HH:mm");
-      console.log(newTime);
-
-          while (moment().format('HH:mm') > newTime) {
-              newTime = moment(newTime, "HH:mm").add({minutes:array[i].frequency}).format('HH:mm');;
-            };
-
-        var timeNow = moment().format("HH:mm");
-        var timeDiff = moment().diff(moment(newTime).format("HH:mm"));
-
-      document.getElementById('table').innerHTML += '<tr id="col'+i+'"></tr>';
-      document.getElementById('col'+i).innerHTML += '<td>'+array[i].name+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+array[i].destination+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+array[i].frequency+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+newTime+'</td>';
-      document.getElementById('col'+i).innerHTML += '<td>'+timeDiff+'</td>';
-    }
-
-    console.log(moment());
-
-});
-
-document.getElementById("submit").onclick = function() {
-  var trainName = $("#name").val();
-  var trainDestination = $("#destination").val();
-  var trainFirst = $("#first").val();
-  var trainFrequency = $("#frequency").val();
-  var trainArrival = '';
-  var trainAway = '';
-
-  database.ref(/* the location in the databae*/).push({
-    name: trainName,
-    destination: trainDestination,
-    frequency: trainFrequency,
-    arrival: trainArrival,
-    away: trainAway,
-    first: trainFirst
-  });
-
-  location.reload();
-
-}
-
-
-  </script>
+  <script src="app.js"></script>
 
 </body>
 
