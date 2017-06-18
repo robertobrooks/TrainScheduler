@@ -1,3 +1,26 @@
+//Set current time
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+  t = setTimeout(function() {
+    startTime()
+  }, 500);
+}
+startTime();
+
 //This function is to convert string time to moment variable
 function getMomentFromTimeString(str) {
   var t = moment(str, 'HH:mm A');
@@ -71,20 +94,16 @@ database.ref().on('value', function(snapshot) {
 
 // Creating the functionality for the submit button
 document.getElementById("submit").onclick = function() {
-  var trainName = $("#name").val();
-  var trainDestination = $("#destination").val();
-  var trainFirst = $("#first").val();
-  var trainFrequency = $("#frequency").val();
-  var trainArrival = '';
-  var trainAway = '';
+  var trainName = $("#name").val().trim();
+  var trainDestination = $("#destination").val().trim();
+  var trainFirst = $("#first").val().trim();
+  var trainFrequency = $("#frequency").val().trim();
 
   database.ref().push({
     name: trainName,
     destination: trainDestination,
-    frequency: trainFrequency,
-    arrival: trainArrival,
-    away: trainAway,
-    first: trainFirst
+    first: trainFirst,
+    frequency: trainFrequency
   });
 
   location.reload();
